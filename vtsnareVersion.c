@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-//  THIS CODE IS FOR THE N = 5 --------------------------------
+//  THIS CODE IS FOR THE N = 10 --------------------------------
 
-#define M 10	       
-#define N 5
-#define snareLength 10
+#define M 20      
+#define N 10
+#define snareLength 20
 
 _Bool nondet_bool();
 unsigned int nondet_uint();
@@ -34,7 +34,7 @@ struct EdgeBag
    unsigned int count;
    snareVector  vSnare;
    snareVector tSnare;
-   snareVector zebra[snareLength];
+   snareVector zebraMask[snareLength];
    snareVector combinedMask; 
 };
 
@@ -68,7 +68,7 @@ int main (int argc, char** argv)
  {    
 	int j; 
     unsigned int pos, i, k, l, w, x, y , iVal, jVal , g, g0, lastg, ng ;
-    unsigned int edgePos, bagNo = 0, colorNode = 0 , minColor, cPos = 0 , tComp, result;
+    unsigned int edgePos, bagNo = 0, colorNode = 0 , minColor, cPos = 0;
     unsigned int len = 0, ticks, valj, vali , vSnareChoicet[snareLength] , vSnareChoicef[snareLength];
     _Bool Ck=0, Cf = 1, C0, C1, C2 = 1, C3 = 1, C4, C5; 
 
@@ -77,7 +77,7 @@ int main (int argc, char** argv)
 
     bitvector  fareTotal, inTotal, outTotal , outVSnareTotal , inVSnareTotal , outTSnareTotal , inTSnareTotal ;
     snareVector total, cond2Total, cond2fareTotal, centTotal, placeHolder, v, t, f, v2, lastv, lastv2 ,nv, nv2, v0, v02 ;
-    snareVector Tedge[N][N], Vedge[N][N] , Vedge2[N][N] , Tedge2[N][N], vt ,vf ;
+    snareVector Tedge[N][N], Vedge[N][N] , Vedge2[N][N] , Tedge2[N][N] ;
     
     //  FriendMatrix is v * t-snare matrix where v snares are rows and T snares are columns
     snareVector friendMatrix[snareLength];     
@@ -85,12 +85,18 @@ int main (int argc, char** argv)
     snareVector onOffMatrix[N], stCorres , ew;
   
     // Input the graph *******************************************
-    unsigned int graph[N][N] =  { {0, 2, 0, 0, 1},
-                                {1, 0, 1, 1, 0}, 
-							    {1, 0, 0, 0, 0}, 
-								{1, 0, 1, 0, 0}, 
-								{0, 0, 0, 1, 0}
+     unsigned int graph[N][N] =  { {0, 2, 0, 0, 1, 1, 0, 0, 0, 0},
+                                {1, 0, 1, 1, 0, 0, 0, 0, 0, 0}, 
+							    {1, 0, 0, 0, 0, 0, 1, 0, 0, 0}, 
+								{1, 0, 1, 0, 0, 1, 0, 0, 0, 0}, 
+								{0, 0, 0, 1, 0, 0, 0, 1, 0, 0}, 
+								{0, 0, 0, 0, 1, 0, 0, 0, 0, 2}, 
+								{0, 0, 0, 0, 0, 0, 0, 1, 0, 1}, 
+							    {1, 0, 0, 0, 0, 0, 0, 0, 2, 0}, 
+								{0, 0, 0, 0, 1, 1, 0, 0, 0, 0}, 
+								{0, 0, 0, 0, 0, 0, 2, 0, 0, 0}
                           };
+  
   
 
     //  Calculate the total required length that is required for our container
@@ -152,6 +158,8 @@ int main (int argc, char** argv)
     
     
      
+//  STEADY STATE CONDITION BEGINS --------------------------------------- 
+    
 //  STEADY STATE CONDITION BEGINS --------------------------------------- 
     
     C1 = 1;
@@ -403,57 +411,34 @@ int main (int argc, char** argv)
     }
     
     // Main restrictions on the program :
-    
-    
-    // For each edge present
-//for  (i = 0; i < len; i++) {
-        
+  // Main restrictions on the program :
+    for  (i = 0; i < len; i++) {
+        centTotal = 0b0;
+        total = 0b0;
+        ticks = 0;
+        Ck = 0;
         //  Check if jth vSnare is present then check if all its t-snare frds are present on the edge. 
         //  If yes don't consider him as a cnadidate to check the fusion that happens btw current nodes.
         //  POINT I MISSED : Make sure that t snares are onn, on target node. 
-    for  (j = 0; i < len; j++) {    // For each elemet you have to follow some rules 
-        if (j < snareLength)
-		{
-			  
-		  v = edgeBag[i].vSnare;
+        for  (j = 0; j < snareLength; j++) {
+           v = edgeBag[i].vSnare;
            t = edgeBag[i].tSnare;
-          // f = friendMatrix[j];
+           f = friendMatrix[j];
            valj = edgeBag[i].jth;
            vali = edgeBag[i].ith;
           
-           if  (v & (1 << j))  {  // jth vsnare is present on the edge  
-       
-              // Logic for active vsnare or not
-              
-              tComp = t;    // Converting bitvector to the integer number                 
-
-              vt = vSnareChoicet[j];   // Convert the number to a bitvector
-             
-              result = vt & (1 << tComp);    // Find whether its active based upon the function choosen
-			  
-
-              if (result == 0) {   // Means jth vsnare is active 
-                  
-                  edgeBag.zebra[ticks] = j; // add to the array the active v snares index
-                  ticks = ticks + 1;
-
-				  //  Target Edge Should have all required t snares present and Onn in Order to Make fusion Possible.       
-                  
-				  //  Convert the number to the bitvector
-				  fComp  =  (Tnodes[valj]  & onOffMatrix[valj] ); 
-                  bComp =    Tnodes[vali] & onOffMatrix[vali] ; 			  
-
-				  //  Convert the fusion function choosen to bitvector
-                  vf  =  vSnareChoicef[j];
-                  
-				  // First part makes sure that fusion is allowed and second part states that back fusion is not allowed
-                  if (  (vf  & ( 1 << fComp))&& ( (vf & ( 1 << bComp)) == 0 ))  {
-                         Ck = 1 ;                                  
-                 }
-             }
+           if  ((v & (1 << j)) && ((t & f) == 0) ) {  // Jth vsnare is present 
+              centTotal = centTotal | f;
+              ticks = ticks + 1;
+              //  Target Edge Should have all required t snares present and Onn in Order to Make fusion Possible.       
+              if ( (((Tnodes[valj]  & onOffMatrix[valj] ) & f)  != 0 ) && ((onOffMatrix[vali] & f) == 0)) {
+                 Ck = 1 ;                                  
+              }
            }
-          }
+         }
+
            
+         edgeBag[i].combinedMask = centTotal;
          edgeBag[i].count = ticks;
 
          if(Ck == 1) {
@@ -468,35 +453,14 @@ int main (int argc, char** argv)
          // the onOffMatrix cause all the tsnares that are pattern to be absent.
           for (k = 0; (k < N); k++){
               if ((k != edgeBag[i].jth)){
-				  
-            // Will represent the bitvector of the node
- 			  bComp =  Tnodes[k] & onOffMatrix[k] ;   // Convert the bitvector into interger number
-			 			  
-			  // For each active v snares that might be reasponsible for fusion make sure its not making glue to others
-			  for (l = 0 ; l < ticks ; l++) {   
-                
-			    vf = vSnareChoicef[edgeBag[i].zebra[l]];  // Convert the chosen number into the bitvector
-	
-			    if ( (vf & (1 << bComp)) == 0)
-                  {
-					  
+                 //  You can clean It too
+                 if(( (onOffMatrix[k]) & cond2Total) == 0) {
                         C3 = C3 && 1;
                   }
                  else {
                       C3 = C3 && 0;
                   }
-				  }
-        
-        }
-		
-		else {
-			j = -1;
-			i = i + 1;
-			centTotal = 0b0;
-            total = 0b0;
-            ticks = 0;
-            Ck = 0;
-		}
+                }
               }
          }
 
