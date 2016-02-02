@@ -64,9 +64,9 @@ http://www.cprover.org/cbmc/
 //  c::main.loop_number:total_number_of_unwindings
 # cbmc filename.c --unwindset c::main.0:10,c::main.1:20  --no-unwinding-assertions 
 
-// For fiveVTSnare.c loop Number 7,8,10,11 are the ones 
-# cbmc filename.c --unwindset c::main.7:5,c::main.8:5,c::main.10:5,c::main.11:5 
-   --no-unwinding-assertions 
+// For fiveVTSnare.c loop Number 7,8,10,11 are the dynamic ones 
+# cbmc filename.c --unwindset c::main.7:5,c::main.8:5,c::main.10:5,c::main.11:5 --no-unwinding-assertions
+    
 
 ```
 
