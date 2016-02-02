@@ -56,7 +56,8 @@ http://www.cprover.org/cbmc/
 
 # In Order To Run :
 // First check from file the line number of dynamic code. I have commented which one is dynamic.
-// Forexample in friendZoned.c Line No. 181 ,185,2985,300 are dynamic.  So you have to provide total unwindings to the loop.
+// Forexample in friendZoned.c Line No. 181 ,185,2985,300 are dynamic. 
+// So you have to provide total unwindings to the loop.
 # cbmc filename.c --show-loops
 
 // There are parts that are dynamic in the code s just write basic --unwindset
