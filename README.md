@@ -1,6 +1,5 @@
-# friendZoned
 
-Welcome to FrienZoned Model Of Vesicular Traffic System!
+# Welcome to FrienZoned Model Of Vesicular Traffic System!
 =======================
 
 The Biology model of Trafficing happens at cell level. This model is complete vsnare and tsnare analogy of what happens in real cell. 
@@ -65,13 +64,10 @@ http://www.cprover.org/cbmc/
 # cbmc filename.c --unwindset c::main.0:10,c::main.1:20  --no-unwinding-assertions 
 
 // For fiveVTSnare.c loop Number 7,8,10,11 are the ones 
-# cbmc filename.c --unwindset c::main.7:5,c::main.8:5,c::main.10:5,c::main.11:5  --no-unwinding-assertions 
+# cbmc filename.c --unwindset c::main.7:5,c::main.8:5,c::main.10:5,c::main.11:5 
+   --no-unwinding-assertions 
 
-You'll get either verification successFull / a counter example for given input graph.
 ```
-
-
-
 
 License
 -------
