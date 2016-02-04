@@ -75,12 +75,12 @@ License
 
 The LSD Clause
 
-Copyright (c) 2016, *^&$$12)+
-All rights UN-reserved.
+Copyright (c) 2016, @Gogohaskell
 
+All rights UN-reserved.
 
 1. Redistributions of source code may be injurious to health.
 
 2. Redistributions in binary form may expose you to radioactive radiations. 
 
-THIS SOFTWARE IS FREE OF COST LIABILITY TO WHOLE UNIVERSE. THE ONLY POSSIBLE WAY TO CONTIBUTE TO IMPRVE THE CURRENT SITUATION IS TO TAKE RESPONSIBILTY OF ABOVE AND CHANGE IT AS MUCH IS POSSIBLE. 
+THIS SOFTWARE IS FREE OF COST LIABILITY TO The WHOLE UNIVERSE. THE ONLY POSSIBLE WAY TO CONTIBUTE is TO IMPRVE THE CURRENT SITUATION and TAKE RESPONSIBILTY OF ABOVE . CHANGE IT AS MUCH IS POSSIBLE. 
