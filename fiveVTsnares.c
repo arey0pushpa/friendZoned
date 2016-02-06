@@ -6,13 +6,15 @@
 #define M 10	       
 #define N 5
 #define snareLength 10
+#define bigLen  1023
 
 _Bool nondet_bool();
 unsigned int nondet_uint();
 
 typedef unsigned __CPROVER_bitvector[M] bitvector; 
 typedef unsigned __CPROVER_bitvector[snareLength] snareVector; 
-
+typedef unsigned __CPROVER_bitvector[bigLength] bigVector;
+ 
 //Constrine the value between 0 and 1
 unsigned int  nondet (){  
   unsigned int num = nondet_uint();
@@ -26,6 +28,11 @@ unsigned int zeroTon(unsigned int n) {
     return result ;
 };
 
+bigVector nondetBV() {
+     bigVector bv;
+     return bv;
+}
+
 //  Define the Structure of the Container Going to be used -----------------------------------------
 struct EdgeBag
  {
@@ -38,6 +45,8 @@ struct EdgeBag
    snareVector combinedMask; 
 };
 
+
+// Chck which if at index x its 1 or not 
 int pop(unsigned x)
 {
         x = x - ((x >> 1) & 0x55555555);
@@ -69,7 +78,8 @@ int main (int argc, char** argv)
 	int j; 
     unsigned int pos, i, k, l, w, x, y , iVal, jVal , g, g0, lastg, ng ;
     unsigned int edgePos, bagNo = 0, colorNode = 0 , minColor, cPos = 0 , tComp, result;
-    unsigned int len = 0, ticks, valj, vali , vSnareChoicet[snareLength] , vSnareChoicef[snareLength];
+    unsigned int len = 0, ticks, valj, vali;
+    bigVector vSnareChoicet[snareLength] , vSnareChoicef[snareLength] , vt , vf;
     _Bool Ck=0, Cf = 1, C0, C1, C2 = 1, C3 = 1, C4, C5; 
 
     bitvector Vnodes[N];
@@ -77,7 +87,7 @@ int main (int argc, char** argv)
 
     bitvector  fareTotal, inTotal, outTotal , outVSnareTotal , inVSnareTotal , outTSnareTotal , inTSnareTotal ;
     snareVector total, cond2Total, cond2fareTotal, centTotal, placeHolder, v, t, f, v2, lastv, lastv2 ,nv, nv2, v0, v02 ;
-    snareVector Tedge[N][N], Vedge[N][N] , Vedge2[N][N] , Tedge2[N][N], vt ,vf ;
+    snareVector Tedge[N][N], Vedge[N][N] , Vedge2[N][N] , Tedge2[N][N];
     
     //  FriendMatrix is v * t-snare matrix where v snares are rows and T snares are columns
     snareVector friendMatrix[snareLength];     
@@ -86,12 +96,17 @@ int main (int argc, char** argv)
   
     // Input the graph *******************************************
     unsigned int graph[N][N] =  { {0, 2, 0, 0, 1},
-                                {1, 0, 1, 1, 0}, 
-							    {1, 0, 0, 0, 0}, 
-								{1, 0, 1, 0, 0}, 
-								{0, 0, 0, 1, 0}
+                                  {1, 0, 1, 1, 0}, 
+                                  {1, 0, 0, 0, 0}, 
+			                      {1, 0, 1, 0, 0}, 
+			                      {0, 0, 0, 1, 0}
                           };
   
+
+    // Add code for checking the connctedness of the graph
+    //
+    
+    // Add code for allowing 3 conncted graph but not 4 connct graph
 
     //  Calculate the total required length that is required for our container
     for (i = 0; i < N; i++) {
@@ -115,6 +130,7 @@ int main (int argc, char** argv)
             if ((graph[i][j] == 1) || (graph[i][j] == 2)) {
                   edgeBag[edgePos].ith = i;
                   edgeBag[edgePos].jth = j;
+                  // Avoid use of subset function
                   __CPROVER_assume((edgeBag[edgePos].vSnare  & (~ Vnodes[i])) == 0);
                   __CPROVER_assume((edgeBag[edgePos].tSnare  & (~ Tnodes[i])) == 0); ;
                   Vedge[i][j] = edgeBag[edgePos].vSnare;
@@ -125,6 +141,7 @@ int main (int argc, char** argv)
             if ((graph[i][j] == 2)) {
                  edgeBag[edgePos].ith = i;
                  edgeBag[edgePos].jth = j;
+                  // Avoid use of subset function
                   __CPROVER_assume((edgeBag[edgePos].vSnare  & (~ Vnodes[i])) == 0);
                   __CPROVER_assume((edgeBag[edgePos].tSnare  & (~ Tnodes[i])) == 0);
                   Vedge2[i][j] = edgeBag[edgePos].vSnare;
@@ -140,7 +157,7 @@ int main (int argc, char** argv)
     for (j = 0; j < len; j++) {
          C0 = (C0 && (edgeBag[j].vSnare != 0));
      }
-    
+   //  Make assumption that each TNodes will be differnt.    
     for  (i = 0; i < N; i++) {
         for ( j = 0; j < N; j++) {
             if ( i != j) {
@@ -156,41 +173,51 @@ int main (int argc, char** argv)
     
     C1 = 1;
 
-//  VSNARES STEADY SATATE CONDITION TO AVOID ANY CONFISION THIS BAD CODE
+
+//  JUST FOR VSNARES STEADY SATATE CONDITION, TO AVOID ANY CONFISION THIS IS BAD CODE
 	
     i = 0;    // For each Edge == Len 
-    for (j = 0; i < len ; j++) {       // for each molecule Plz check the code         
+    for (j = 0; i < len ; j++) {       // for each molecule          
           if (j < M) {
 
-//********************** All those molecules that are present *****************************
-// LOGIC TO MAKE SURE that they come back to original node in a cycle
+//  All those molecules that are present, MAKE SURE that they come back to original node in a cycle
+//  ONLY FOR Vsnares 
             
             unsigned int big;
 
             if(edgeBag[i].vSnare & (1 << j)) {     // Present molecules   
           
-                vali = edgeBag[i].ith;
-                valj = edgeBag[i].jth;
+                vali = edgeBag[i].ith;   // store the source node
+                valj = edgeBag[i].jth;   // Store the target node
             
-                //It should be on some cycle 
+                //  It should be on some cycle, So assume that it'll be between 1 and 9.
+                //  As we are Only considering elementary cycles.
+
                 __CPROVER_assume( big >= 1 && big <= (N - 1));
 
-                unsigned int path[big];
+                unsigned int path[big];   // An array to store the path taken by molecule.
               
-              //  Make sure every int is between 0 and 9 that represent the node
+               //  Make sure every int is between 0 and 9 that represent the node
+               //  Allowing Only eight steps max will force to write one more block.
+ 
                 for (l = 0; l < big; l++) {           // this is DYNAMIC TOO
                       path[l] = zeroTon(N - 1);
                 } 
+
 // ======== JUST TO CHECK MOLECULES COMES BACK IN A CYCLE ======================= 
+
                 for (k = 0; k < big; k++)           // THIS IS DYNAMIC 
                 {
 				 
 				 if ((k == 0) && (k == (big - 1)))  {     // If its first Node and only node
-			       if (path[k] == vali) {		 
-					 g0  = graph[valj][path[k]];
-					 v0  = Vedge[valj][path[k]];
-					 v02 = Vedge2[valj][path[k]]; 
-                    
+                                       // Big == 1
+	        		       if (path[k] == vali) {	       // path[k] == vali represents same node	 
+					 g0  = graph[valj][path[k]];    // g0 is unsigned int checks if there is an edge btw two nodes
+					 v0  = Vedge[valj][path[k]];    // snareVector gets the edgeweight of the corresponding edge.
+					 // V02 has been used to get the edgeweight in case graph[i][j] = 2.
+                                         v02 = Vedge2[valj][path[k]];   // snareVecor gets the edgeweight of second edge if graph[i][j] == 2 !
+
+                    // Check that there is an edge btw valj ---- pathk  and under investigation vsnare is present on edge.
                     if ( (( g0 == 1) && (v0 & (1 << j))) ||  ( (g0 == 2) &&  ( (v0 & ( 1 << j)) || ( v02 & (1 << j)) ) ))  {
                              C1 = C1 && 1;
                     }
@@ -213,13 +240,14 @@ int main (int argc, char** argv)
                              C1 = C1 && 1;
                     }
                     else {
-                           C1 = C1 && 0;
+                           C1 =  0;
                     }
                     
                   }
                   
                   else if (k == (big - 1)) {     // Last node
-					if (path[k] == vali) {
+
+                            // In case of last node.
 						
 					 lastg  = graph[path[k]][vali];
 					 lastv  = Vedge[path[k]][vali];
@@ -235,10 +263,7 @@ int main (int argc, char** argv)
 					  }
 				    }
 				    
-				    else {
-					   C1 = 0;
-				    }
-				 }
+				    
 				 
                  else {         // Any other node besides first and last   					
 					
@@ -269,7 +294,7 @@ int main (int argc, char** argv)
    
   
   
-    // FOR TSNARES IN ORDER TO AVOID CONFUSION WE ARE WRITING AWEFUL CODE ;
+    // FOR TSNARES IN ORDER TO AVOID CONFUSION . Else in a single for loop we could have written for both v and t snares;
     
      i = 0;    // For each Edge == Len 
         for (j = 0; i < len ; j++) {       // for each molecule Plz check the code
@@ -334,7 +359,6 @@ int main (int argc, char** argv)
                   }
                   
                   else if (k == (big2 - 1)) {     // Last node
-					if (path1[k] == vali) {
 						
 					 lastg  = graph[path1[k]][vali];
 					 lastv  = Tedge[path1[k]][vali];
@@ -348,10 +372,6 @@ int main (int argc, char** argv)
 				      else {
 					 	 C1 = 0;
 					  }
-				    }
-				    
-				    else {
-					   C1 = 0;
 				    }
 				 }
 				 
@@ -384,42 +404,38 @@ int main (int argc, char** argv)
     }
     
     
-    /*
-    //  Lets say we have f[#func =  2 ^ 2 ^ N]  = { f0 , f1 , f2 , ... }
-    //  Each function will be a table of 2 ^ n length. 
-    //  f[i] each is a bitvector array of 2 ^ n length each of snareLength bits long.
-    //  Results have been stored on result[#f] as bivector of length snarelength
-    //  Write a function that chooses arbir f[] from this function for each vSnare.
     
-    */
 
    // Step1 : Choose arbitary function for each vsnare to t snare :
+      //  We are representing each possible function as bitvector representing bitvector of length 
+      // 1024 gave us power to represent all 2 ^ 1024 functions.
+
     for  (i = 0; i < snareLength ; i ++ ) {
-         vSnareChoicet[i] = zeroTon(1023);
+         vSnareChoicet[i] = nondetBV();
     }
 
     for (j = 0; j< snareLength; j++) {
-        vSnareChoicef[i] = zeroTon(1023);
+        vSnareChoicef[i] = nondetBV();
     }
     
     // Main restrictions on the program :
     
     
     // For each edge present
-//for  (i = 0; i < len; i++) {
-        
         //  Check if jth vSnare is present then check if all its t-snare frds are present on the edge. 
         //  If yes don't consider him as a cnadidate to check the fusion that happens btw current nodes.
         //  POINT I MISSED : Make sure that t snares are onn, on target node. 
-    for  (j = 0; i < len; j++) {    // For each elemet you have to follow some rules 
+     
+     i = 0;
+     for  (j = 0; i < len; j++) {    // For each elemet you have to follow some rules 
         if (j < snareLength)
 		{
 			  
 		  v = edgeBag[i].vSnare;
-           t = edgeBag[i].tSnare;
-          // f = friendMatrix[j];
-           valj = edgeBag[i].jth;
-           vali = edgeBag[i].ith;
+                  t = edgeBag[i].tSnare;
+                  // f = friendMatrix[j];
+                  valj = edgeBag[i].jth;
+                  vali = edgeBag[i].ith;
           
            if  (v & (1 << j))  {  // jth vsnare is present on the edge  
        
@@ -437,11 +453,11 @@ int main (int argc, char** argv)
                   edgeBag.zebra[ticks] = j; // add to the array the active v snares index
                   ticks = ticks + 1;
 
-				  //  Target Edge Should have all required t snares present and Onn in Order to Make fusion Possible.       
+		//  Target Edge Should have all required t snares present and Onn in Order to Make fusion Possible.       
                   
-				  //  Convert the number to the bitvector
-				  fComp  =  (Tnodes[valj]  & onOffMatrix[valj] ); 
-                  bComp =    Tnodes[vali] & onOffMatrix[vali] ; 			  
+		//  Convert the number to the bitvector
+		  fComp  =  (Tnodes[valj]  & onOffMatrix[valj] ); 
+                  bComp  =  Tnodes[vali] & onOffMatrix[vali] ; 			  
 
 				  //  Convert the fusion function choosen to bitvector
                   vf  =  vSnareChoicef[j];
