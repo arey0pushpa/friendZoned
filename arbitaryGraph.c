@@ -400,9 +400,7 @@ int main (int argc, char** argv)
           }
           
     }
-    
-    
-    
+     
 
    // Step1 : Choose arbitary function for each vsnare to t snare :
       //  We are representing each possible function as bitvector representing bitvector of length 
