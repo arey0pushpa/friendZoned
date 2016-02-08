@@ -5,14 +5,15 @@
 
 int main() {
    unsigned int x,y,z;
-   for ( x  = 0; x < 16000; x ++) {
-       if ( 10 > 2) {
-           y = 2 + 2;
+   for ( x  = 0; x < 8000; x ++) {
+       for ( z =0; z < 8000; z++) {
+          if ( 10 > 2) {
+             y = 2 + 2;
+          }
+          else {
+             printf("ghost");
+          }
        }
-       else {
-           printf("ghost");
-       }
-
          //  printf(
        printf("cbmc");
    }
