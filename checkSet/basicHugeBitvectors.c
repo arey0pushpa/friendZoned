@@ -1,53 +1,21 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-//  THIS CODE IS FOR THE Arbitary grah with 3 conncted and 4 conncted added constrint --------------------------------
-// Starting with N  = 5
-
 #define M 10	       
-#define N 5
-#define snareLength 10
 #define bigLen  1023
 
 _Bool nondet_bool();
 unsigned int nondet_uint();
 
 typedef unsigned __CPROVER_bitvector[M] bitvector; 
-typedef unsigned __CPROVER_bitvector[snareLength] snareVector; 
 typedef unsigned __CPROVER_bitvector[bigLen] bigVector;
  
-//Constrine the value between 0 and 1
-unsigned int  nondet (){  
-  unsigned int num = nondet_uint();
-  __CPROVER_assume( num>= 0 && num  <= 1);
-   return num;
-};
-
-unsigned int zeroTon(unsigned int n) {
-    unsigned int result = nondet_uint();
-    __CPROVER_assume(result >=0 && result <=n);
-    return result ;
-};
 
 bigVector nondetBV() {
      bigVector bv;
      return bv;
 }
 
-//  Define the Structure of the Container Going to be used -----------------------------------------
-struct EdgeBag
- {
-   int ith;
-   int jth;
-   unsigned int count;
-   snareVector  vSnare;
-   snareVector tSnare;
-   snareVector zebra[snareLength];
-   snareVector combinedMask; 
-};
-
-
-// Chck which if at index x its 1 or not 
 int pop(unsigned x)
 {
         x = x - ((x >> 1) & 0x55555555);
@@ -65,29 +33,30 @@ int main (int argc, char** argv)
 {    
 
     unsigned int i, j; 
-     
-    bitvector B1 , B2 ;
 
-    bitvector b;
+    __CPROVER_bitvector[100] B0 , B1 , B2 , B3 , B4 , B5;
+
+    B0 = 0b1;
+    _Bool b1 , b2;
 
     B1 = nondetBV();
 
     printf(" The value of the big Bitvector is %d ", B1);
    
-    b = 0b10;
-    printf(" The value of the small Bitvector is %d ", b);
 
-    B2 =  B1 & b;
-    printf(" The value of the another big Bitvector is %d ", B2);
+    B2 = 0b1110111111111111111111111111111;
+ 
+    
+    B3 = 0b1111111111111111111111111111111111111111111111111111111111111;
 
-    if (B2 & ( 1 << 1) ) {
+    B4 = B3 & (B2); 
 
-        printf(" Thsi world is mine and i'm mr. crowley!");
+    b1 = B3 & ( B0 << 45);
+    B5 = B3 & ( B0 << 45);
 
-    }
-
-
-
+    printf(" B4 = %d", B4);
+    printf(" B5 = %d", B5);
+    printf(" b1 = %d", b1);
 
 
     assert(0);

@@ -70,6 +70,7 @@ int main (int argc, char** argv)
     unsigned int len = 0, ticks, valj, vali , calc;
     unsigned int connectedArray[N] = {};
     bigVector vSnareChoicet[snareLength] , vSnareChoicef[snareLength] , vt , vf;
+    bigVector b1;
     _Bool Ck=0, Cf = 1, C0, C1, C2 = 1, C3 = 1, C4, C5; 
 
     bitvector Vnodes[N];
@@ -442,7 +443,7 @@ int main (int argc, char** argv)
 
               vt = vSnareChoicet[j];   // bitvector representation of function 
              
-              result = vt & (1 << tComp);    // Find whether its active based upon the function choosen
+              result = vt & (b1 << tComp);    // Find whether its active based upon the function choosen
 			  
 
               if (result == 0) {   // Means jth vsnare is active 
@@ -461,7 +462,7 @@ int main (int argc, char** argv)
                   
 				  // First part makes sure that fusion is allowed and second part states that back fusion is not allowed
                   // vf & active t snares should == 1 for f comp and vf & active vsnares == 0 for b comp
-                  if (  (vf  & ( 1 << fComp))&& ( (vf & ( 1 << bComp)) == 0 ))  {
+                  if (  (vf  & ( b1 << fComp)) && ( (vf & ( b1 << bComp)) == 0 ))  {
                          Ck = 1 ;                                  
                  }
              }
@@ -492,7 +493,7 @@ int main (int argc, char** argv)
                 
 			    vf = vSnareChoicef[edgeBag[i].zebra[l]];  // Convert the chosen number into the bitvector
 	
-			    if ( (vf & (1 << bComp)) == 0)
+			    if ( (vf & (b1 << bComp)) == 0)
                   {
 					  
                         C3 = C3 && 1;
