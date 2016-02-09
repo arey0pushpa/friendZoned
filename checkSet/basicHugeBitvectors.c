@@ -75,10 +75,10 @@ int main (int argc, char** argv)
     printf(" The value of the big Bitvector is %d ", B1);
    
     b = 0b10;
-    printf(" The value of the small Bitvector is %d ", B1);
+    printf(" The value of the small Bitvector is %d ", b);
 
     B2 =  B1 & b;
-    printf(" The value of the another big Bitvector is %d ", B1);
+    printf(" The value of the another big Bitvector is %d ", B2);
 
     if (B2 & ( 1 << 1) ) {
 

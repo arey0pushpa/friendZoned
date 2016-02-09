@@ -100,6 +100,9 @@ int main (int argc, char** argv)
          } 
     }
 
+    __CPROVER_assume(len >= (2 * N));
+
+
     //  Define the Container as Basis of our work  --------------------------
     //  Declare a Structure array of length =  len ; Will give structure to things coming
     struct EdgeBag edgeBag[len];
