@@ -4,10 +4,10 @@
 //  THIS CODE IS FOR THE Arbitary grah with 3 conncted and 4 conncted added constrint --------------------------------
 // Starting with N  = 5
 
-#define M 10	       
-#define N 5
-#define snareLength 10
-#define bigLen  1023
+#define M 18	       
+#define N 9
+#define snareLength 9
+#define bigLen  512
 
 _Bool nondet_bool();
 unsigned int nondet_uint();
@@ -86,14 +86,22 @@ int main (int argc, char** argv)
     snareVector onOffMatrix[N], stCorres , ew;
   
     // Input the graph *******************************************
-    unsigned int graph[N][N];
+    unsigned int graph[N][N] = {{1,0,1,1,1,1,0,1,0},
+                                {1,1,1,1,1,1,1,2,0},
+                                {1,1,1,1,1,1,1,2,1},
+                                {1,1,1,1,1,1,1,1,0},
+                                {1,1,1,0,1,1,1,1,0},
+                                {1,1,1,1,1,1,0,0,1},
+                                {1,1,1,1,1,1,1,0,1},
+                                {1,1,1,1,1,1,1,0,1},
+                                {1,2,1,1,1,0,1,1,1}};
     
     //  Calculate the total required length that is required for our container
     //  Pre calculating the length ( total edges ) .
     for (i = 0; i < N; i++) {
         for (j = 0; j < N; j++) {
             if(graph[i][j] == 1) {
-		         len = len + 1;
+		len = len + 1;
              }
             else if(graph[i][j] == 2) {
                 len =  len + 2;
@@ -111,7 +119,7 @@ int main (int argc, char** argv)
     //  Fill the Container values with i, j, edgeWeigth, vsnare, tsnare Values.
     edgePos = 0;
     for  (i = 0; i < N; i++) {
-		for  (j = 0; j < N; j++) {
+	for  (j = 0; j < N; j++) {
               if ((graph[i][j] == 1) || (graph[i][j] == 2)) {
                   
                   edgeBag[edgePos].ith = i;     // Record the source node
@@ -147,11 +155,10 @@ int main (int argc, char** argv)
 
 // FIRST CONSTARAINT ON THE GRAPH 
 // The code for make sure that it'll be 3 connected and not four connected
-        
         C4 = 1;
         for ( i = 0; i < N ; i++) {
             calc = 0;
-            for ( j = 0 ; j < len; j++) {
+            for ( j = 0 ; j < len; j++) {              // 20 UNWINDINGS DYNAMIC
                 if ( (edgeBag[j].ith == i) || (edgeBag[j].jth == i) ){
                     calc += 1;
                 }
@@ -169,7 +176,7 @@ int main (int argc, char** argv)
 
     //  Edgeweight is not allowed to be zero : build C0 to represent that :
     C0 = 1; 
-    for (j = 0; j < len; j++) {
+    for (j = 0; j < len; j++) {   //  DYNAMIC
          C0 = (C0 && (edgeBag[j].vSnare != 0));
      }
    //  Make assumption that each TNodes will be differnt.    
@@ -191,7 +198,7 @@ int main (int argc, char** argv)
 
 //  JUST FOR VSNARES STEADY SATATE CONDITION, TO AVOID ANY CONFISION THIS IS BAD CODE
 	
-   for ( i = 0; i < len; i++ ) {      // For each Edge == Len 
+   for ( i = 0; i < len; i++ ) {      // For each Edge  
      for (j = 0; j < M ; j++) {       // for each molecule          
 
 //  All those molecules that are present, MAKE SURE that they come back to original node in a cycle
@@ -305,7 +312,7 @@ int main (int argc, char** argv)
   
     // FOR TSNARES IN ORDER TO AVOID CONFUSION . Else in a single for loop we could have written for both v and t snares;
     
-      for ( i = 0; i < len; i++) {  // For each Edge == Len 
+      for ( i = 0; i < len; i++) {  // For each Edge == Len  
           for (j = 0; j < M ; j++) {       // for each molecule Plz check the code
           
 			  
@@ -426,8 +433,8 @@ int main (int argc, char** argv)
         //  If yes don't consider him as a cnadidate to check the fusion that happens btw current nodes.
         //  POINT I MISSED : Make sure that t snares are onn, on target node. 
      
-    for (i = 0; i < len; i++) {
-        for  (j = 0; i < snareLength; j++) {    // For each elemet you have to follow some rules 
+    for (i = 0; i < len; i++) {   // DYNAMIC 
+        for  (j = 0; j < M; j++) {    // For each elemet you have to follow some rules 
 		  
                v = edgeBag[i].vSnare;
                t = edgeBag[i].tSnare;
@@ -517,7 +524,8 @@ int main (int argc, char** argv)
         printf(" TNodes[%d] = %d" , i , Tnodes[i]);
         
     }
-    for  (i = 0; i < len; i++) {
+    /*
+    for  (i = 0; i < len; i++) {  //
 
         printf("The edge No.%d has this config : \n There is an edge between graph[%d][%d]", i, edgeBag[i].ith, edgeBag[i].jth);
         printf(" SourceNodes[%d] (v : t) = (%d , %d)" , edgeBag[i].ith , Vnodes[edgeBag[i].ith] , Tnodes[edgeBag[i].ith]);
@@ -526,7 +534,7 @@ int main (int argc, char** argv)
         printf (" combinedMask = %d \n counts = %d \n" ,edgeBag[i].combinedMask, edgeBag[i].count);
    
    }
-   
+   */
 
     for  (i = 0; i < snareLength; i++) {
         printf( " The InteractionMatrix[%d] = %d ", i , friendMatrix[i]);
