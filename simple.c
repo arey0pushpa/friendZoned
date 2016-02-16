@@ -155,7 +155,7 @@ int main (int argc, char** argv)
 
 // FIRST CONSTARAINT ON THE GRAPH 
 // The code for make sure that it'll be 3 connected and not four connected
-        C4 = 1;
+        C4 = 0;
         for ( i = 0; i < N ; i++) {
             calc = 0;
             for ( j = 0 ; j < len; j++) {              // 20 UNWINDINGS DYNAMIC
