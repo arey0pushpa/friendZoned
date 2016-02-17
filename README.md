@@ -2,6 +2,8 @@
 # Welcome to FrienZoned Model Of Vesicular Traffic System!
 =======================
 
+Graph has to Be Strongly connected + Three connected
+But not 2-strongly connected.
 The Biology model of Trafficing happens at cell level. This model is complete vsnare and tsnare analogy of what happens in real cell. 
 
   ![](http://www.zoology.ubc.ca/~berger/B200sample/unit_8_protein_processing/images_unit8/14_20.jpg)
