@@ -274,7 +274,8 @@ void main()
               edgeBag[i].zebraMask[ticks] = f;  
               centTotal = centTotal | f;
               ticks = ticks + 1;     
-              if ( ((nodes[valj]  & f)  == f)  && ((onOffMatrix[valj] & f) == f ) && (onOffMatrix[vali] & f) != f)) {
+              if ( ((nodes[valj]  & f)  == f)  && ((onOffMatrix[valj] & f) == f ) && 
+                      ((onOffMatrix[vali] & f) != f)) {
                  Ck = Ck || 1 ;                                  
               }
            }

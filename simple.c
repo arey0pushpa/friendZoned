@@ -6,7 +6,7 @@
 
 #define M 18	       
 #define N 9
-#define snareLength 9
+#define snareLength 18
 #define bigLen  512
 
 _Bool nondet_bool();
@@ -422,7 +422,7 @@ int main (int argc, char** argv)
     }
 
     for (j = 0; j< snareLength; j++) {
-        vSnareChoicef[i] = nondetBV();
+        vSnareChoicef[j] = nondetBV();
     }
     
     // Main restrictions on the program :
@@ -434,7 +434,7 @@ int main (int argc, char** argv)
         //  POINT I MISSED : Make sure that t snares are onn, on target node. 
      
     for (i = 0; i < len; i++) {   // DYNAMIC 
-        for  (j = 0; j < M; j++) {    // For each elemet you have to follow some rules 
+        for  (j = 0; j < snareLength; j++) {    // For each elemet you have to follow some rules 
 		  
                v = edgeBag[i].vSnare;
                t = edgeBag[i].tSnare;
