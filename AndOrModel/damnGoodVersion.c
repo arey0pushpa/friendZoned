@@ -10,13 +10,13 @@
 #define M  20          
 #define MAX 1023      
 #define N 10         
-#define snareLength 10
+#define snareLength 20
 
 _Bool nondet_bool();
 unsigned int nondet_uint();
 
-typedef unsigned __CPROVER_bitvector[20] bitvector; 
-typedef unsigned __CPROVER_bitvector[10] snareVector; 
+typedef unsigned __CPROVER_bitvector[M] bitvector; 
+typedef unsigned __CPROVER_bitvector[snareLength] snareVector; 
 
 //Constrine the value between 0 and 1
 unsigned int  nondet (){  
