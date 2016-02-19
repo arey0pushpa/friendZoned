@@ -9,9 +9,9 @@
 //  THIS CODE IS FOR THE Arbitary grah with 3 conncted and 4 conncted added constrint --------------------------------
 // Starting with N  = 5
 
-#define M 18	       
-#define N 9
-#define snareLength 18
+#define M 20       
+#define N 10
+#define snareLength 20
 #define bigLen  512
 
 _Bool nondet_bool();

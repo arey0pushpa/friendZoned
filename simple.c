@@ -4,10 +4,10 @@
 //  THIS CODE IS FOR THE Arbitary grah with 3 conncted and 4 conncted added constrint --------------------------------
 // Starting with N  = 5
 
-#define M 18	       
-#define N 9
-#define snareLength 18
-#define bigLen  512
+#define M 12	       
+#define N 6
+#define snareLength 12 
+#define bigLen  64
 
 _Bool nondet_bool();
 unsigned int nondet_uint();
@@ -86,15 +86,12 @@ int main (int argc, char** argv)
     snareVector onOffMatrix[N], stCorres , ew;
   
     // Input the graph *******************************************
-    unsigned int graph[N][N] = {{1,0,1,1,1,1,0,1,0},
-                                {1,1,1,1,1,1,1,2,0},
-                                {1,1,1,1,1,1,1,2,1},
-                                {1,1,1,1,1,1,1,1,0},
-                                {1,1,1,0,1,1,1,1,0},
-                                {1,1,1,1,1,1,0,0,1},
-                                {1,1,1,1,1,1,1,0,1},
-                                {1,1,1,1,1,1,1,0,1},
-                                {1,2,1,1,1,0,1,1,1}};
+    unsigned int graph[N][N] = {{1,0,1,1,0,1},
+                                {1,1,1,1,1,1},
+                                {1,1,0,1,1,1},
+                                {1,1,1,1,1,1},
+                                {1,1,1,1,0,1},
+                                {1,2,0,1,1,1}};
     
     //  Calculate the total required length that is required for our container
     //  Pre calculating the length ( total edges ) .
