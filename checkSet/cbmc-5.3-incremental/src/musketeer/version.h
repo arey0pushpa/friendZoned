@@ -1,2 +1,0 @@
-#define GOTO_FENCE_INSERTER_VERSION "0.37"
-
