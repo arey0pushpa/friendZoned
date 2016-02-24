@@ -1,6 +1,6 @@
 import networkx as nx
 
-G = nx.DiGraph()
+G = nx.Graph()
 
 
 
@@ -12,15 +12,15 @@ G = nx.DiGraph()
 
 
 
-w =  [(0,4),(1,0),(1,4),(2,1),(2,2),(3,0),(3,2),(3,2),(3,3),(4,4)]
+w =  [(0,1),(0,3),(0,4) ,(1,0), (1,4),(2,1), (3,1),(3,2),(4,2),(4,3)]
 G.add_edges_from(w)
 
-b1  = nx.is_strongly_connected(G)
-#b2 = nx.is_biconnected(G)
+#b1  = nx.is_strongly_connected(G)
+b2 = nx.is_biconnected(G)
 
 
-print(b1)
-#print(b2)
+#print(b1)
+print(b2)
 
 #basis = nx.simple_cycles(G)
 #k = 0
