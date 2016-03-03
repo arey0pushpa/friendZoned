@@ -79,12 +79,13 @@ int main (int argc, char** argv)
 	edgeCount = 0;
     for (i = 0; i < N; i++) {
         for (j = 0; j < N; j++) {
-			if(i != j)
+			if(i != j) {
 				__CPROVER_assume(graph[i][j] >= 0 && graph[i][j] <=2);
 			    if (graph[i][j] == 1)
                     edgeCount += 1;	
                 else if (graph[i][j] == 2) 
-					edgeCount += 2; 				
+					edgeCount += 2;
+            }
              else
 				__CPROVER_assume(graph[i][j] == 0); 
 
