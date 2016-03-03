@@ -120,8 +120,7 @@ int main (int argc, char** argv)
                      C5 = C5 && 1;
                 else 
                      C5 = 0;
-            
-             if (nub > 1) {
+
                // rest Of the case is just checking edge btw consecutive array elements
                  for (l = 0; l < nub - 1; l++) {         //Dynamic N - 3  iteration
                        if ( graph[gPath[l]][gPath[l+1]] >= 1 ) 
@@ -129,7 +128,7 @@ int main (int argc, char** argv)
                         else 
                             C5 = 0;
                      }
-                }
+
             }
         }
     }
@@ -329,7 +328,7 @@ int main (int argc, char** argv)
                
 	           g0  = graph[valj][path[0]];    // g0 is unsigned int checks if there is an edge btw two nodes
 	           v0  = Tedge[valj][path[0]];    // snareVector gets the edgeweight of the corresponding edge.
-               v2  = Tedge2[valj][path[0]];
+                   v2  = Tedge2[valj][path[0]];
                
                    gl  = graph[path[big - 1]][vali];
 	           vl  = Tedge[path[big - 1]][vali];    // snareVector gets the edgeweight of the corresponding edge.
