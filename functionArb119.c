@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define M 4	       
-#define N 2
-#define snareLength 4 
-#define bigLen  16 // 2 ^ 2 ^ M
-#define len 3
+#define M 6	       
+#define N 3
+#define snareLength 6 
+#define bigLen  32 // 2 ^ 2 ^ M
+#define len 5
 
 _Bool nondet_bool();
 unsigned int nondet_uint();
@@ -31,7 +31,7 @@ unsigned int zeroTon(unsigned int n) {
 
 bigVector nondetBV() {
      bigVector bee;
-     __CPROVER_assume(bee >= 0b0 && bee <= 0b1111);  
+  //   __CPROVER_assume(bee >= 0b0 && bee <= 0b1111);  
      return bee;
 }
 
@@ -192,43 +192,11 @@ int main (int argc, char** argv)
          C0 = (C0 && (edgeBag[j].vSnare != 0));
      }
      
-   /*  
-   //  Make assumption that each TNodes will be differnt.    
-    for  (i = 0; i < N; i++) {
-        for (j = 0; j < N; j++) {
-            if ( i != j) {
-              __CPROVER_assume(Tnodes[i] != Tnodes[j]);
-              __CPROVER_assume(Vnodes[i] != Vnodes[j]);
-           }
-        } 
-    }
-     */  
-     
       for  (i = 0; i < N; i++) {
 		   __CPROVER_assume(Vnodes[i] != 0);
 	   }
-     
-//  STEADY STATE CONDITION BEGINS --------------------------------------- 
-/*===========================================================================
- *
- * Formal StateMent :
- *
- *  "All those molecules that are present, MAKE SURE that they come back
- *  to original(Source) Node in a cycle "
- *
- * Qbf :
- *
- * For_All i(#edges),j(#molecules) 
- *      There_Exists path[l] : 
- *                graph (path [1..l])
- *
- * l is max N-2 as we are considering only elementary cycles.
- *
- *============================================================================*/
+
  C1 = 1;
-
-
-// No.1 : Steady State Condition For VSnares	
    for (i = 0; i < len; i++ ) {      // For each Edge  
        for (j = 0; j < snareLength; j++) {       // for each molecule               
            if(edgeBag[i].vSnare & (1 << j)) {     // Present molecules   
@@ -291,8 +259,7 @@ int main (int argc, char** argv)
   
   
   
-// No.2 : Steady State Condition For VSnares	
-   for (i = 0; i < len; i++ ) {      // For each Edge  
+ for (i = 0; i < len; i++ ) {      // For each Edge  
        for (j = 0; j < snareLength; j++) {       // for each molecule               
            if(edgeBag[i].tSnare & (1 << j)) {     // Present molecules   
                 vali = edgeBag[i].ith;   // store the source node
@@ -303,9 +270,6 @@ int main (int argc, char** argv)
                  }
 
                 else { 
-         		// g0 is unsigned int checks if there is an edge btw two nodes
-                //  It should be on some cycle, So assume that it'll be between 0 and N-2
-                //  As we are Only considering elementary cycles.
                 unsigned int big;
                 __CPROVER_assume( big >= 1 && big <= (N - 2));
      
@@ -357,6 +321,8 @@ int main (int argc, char** argv)
     for (j = 0; j < snareLength; j++) {
         vSnareChoicef[j] = nondetBV();
     }
+    
+    
    
     C2 = 1;
     C3 = 1;
@@ -378,13 +344,15 @@ int main (int argc, char** argv)
 	              fComp  =  (Tnodes[valj] & onOffMatrix[valj]);   
                   bComp  =  (Tnodes[vali] & onOffMatrix[vali]);    		  
                   vf  =  vSnareChoicef[j];    
-                  if (  (vf  & (1 << fComp))  && ( (vf & (1 << bComp)) == 0 ))  {
+                  if (  (vf  & (1 << fComp ))  && ( (vf & (1 << bComp)) == 0 ))  {
                          Ck = 1 ;                                  
                   }
               }
            }
 	     }
+	     
          edgeBag[i].count = ticks;
+         
          if(Ck == 1) {
              C2 = C2 && 1;
          }
@@ -444,7 +412,7 @@ int main (int argc, char** argv)
     printf("\nThe value of : \n C0 = %d \n C1 : %d \n C2 : %d , C3 : %d C4 : %d , C5 = %d \n",C0,C1,C2,C3, C4,C5);
     printf(" the value of mr.Ticks is %d and len was %d ", ticks , len);    
  
-//   assert(0);
+ // assert(0);
   __CPROVER_assert(!(C0 && C1 && C5 && C2 && C3) , "Graph that satisfy friendZoned model exists");   
   return 0; 
 }
