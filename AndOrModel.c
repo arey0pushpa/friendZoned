@@ -151,21 +151,6 @@ int  main()
                    Tedge2[i][j] = edgeBag[edgePos].tSnare;
                    edgePos = edgePos + 1;
              }
-/*
-             if ((graph[i][j] == 3)) {
-                  edgeBag[edgePos].ith = i;      // Record the Source Node  
-                  edgeBag[edgePos].jth = j;      // Record the Target Node
- 
-                 // Only molecule present at the nodes are allowed to fly out.
-                   __CPROVER_assume((edgeBag[edgePos].vSnare  & (~ Vnodes[i])) == 0);
-                   __CPROVER_assume((edgeBag[edgePos].tSnare  & (~ Tnodes[i])) == 0);
-                    // Additional Vedge2[i][j] and Tedge2[i][j] is used to be lookup value in global steady state check condition.
-                   Vedge2[i][j] = edgeBag[edgePos].vSnare;
-                   Tedge2[i][j] = edgeBag[edgePos].tSnare;
-                   edgePos = edgePos + 1;
-             }
- 
-*/
 
           }
      }
@@ -196,17 +181,7 @@ int  main()
     for ( i = 0; i < N; i++) {
               __CPROVER_assume(Vnodes[i] != 0);
     }
-   /*
-    //  Make assumption that each TNodes will be differnt.    
-    for  (i = 0; i < N; i++) {
-        for (j = 0; j < N; j++) {
-            if ( i != j) {
-              __CPROVER_assume(Tnodes[i] != Tnodes[j]);
-              __CPROVER_assume(Vnodes[i] != Vnodes[j]);
-           }
-        } 
-    }
-*/
+    
     C1 = 1;
 // No.1 : Steady State Condition For VSnares	
    for (i = 0; i < len; i++ ) {      // For each Edge  
@@ -328,30 +303,6 @@ int  main()
         } 
       }  // jth for closed    
     }   
-/*
-    C6 = 1;
-    //  C4 : Boolean Condition : Each Row of FriendMatrix is Non-zero : 
-     for  (j = 0; j < snareLength; j++) {
-         if (friendMatrix[j] & (( 1 << snareLength) -1)) {
-             C6 = C6 && 1;
-         }
-         else {
-             C6 = C6 && 0;
-         }
-     }
-
-
-   C7 = 1;
-   //  C5 : Bool , Each Row of OnOffMatrix is Non-zero :
-    for  (j = 0; j < N; j++) {
-         if (onOffMatrix[j] & (( 1 << snareLength) -1))  {
-             C7 = C7 && 1;
-         }
-         else {
-             C7 = C7 && 0;
-         }
-     }
-*/
 
     for  (i = 0; i < len; i++) {
         centTotal = 0b0;
