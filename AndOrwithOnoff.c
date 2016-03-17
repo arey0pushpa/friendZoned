@@ -10,7 +10,7 @@
 #define M 4         
 #define N 2 
 #define snareLength 4
-#define len 3
+#define len 4
 
 _Bool nondet_bool();
 unsigned int nondet_uint();
@@ -51,7 +51,7 @@ int  main()
     unsigned int pos, i, j, k, l, w, x, y , iVal, jVal, g, g0, gl, lastg, ng, nl, nl2 ;
     unsigned int edgePos = 0, bagNo = 0, colorNode = 0 , minColor, cPos = 0 , tComp, result;
     unsigned int  ticks, valj, vali , calc;
-    unsigned int connectedArray[N] = {}, edgeCount = 0;
+    unsigned int edgeCount = 0;
     _Bool Ck=0, Cf = 1, C0, C1, C2 = 1, C3 = 1, C4, C5, C6 , C7; 
 
     bitvector Vnodes[N];
@@ -61,7 +61,7 @@ int  main()
     snareVector total, cond2Total, cond2fareTotal, centTotal, placeHolder, v, vl, vl2, t, f, v2, lastv, lastv2 ,nv, nv2, v0, v02 ;
     snareVector Tedge[N][N], Vedge[N][N] , Vedge2[N][N] , Tedge2[N][N] , fComp , bComp;    
     snareVector friendMatrix[snareLength];     
-    snareVector onOffMatrix[N], stCorres;
+    snareVector onOffMatrix[N], vOnOffMatrix[N], stCorres;
   
     unsigned int graph[N][N]; 
 
@@ -344,13 +344,12 @@ int  main()
 
         for (k = 0; k < N; k++) {
 			if( k != edgeBag[i].jth) {
-				for ( l = 0; l < edgeBag[i].count ; l++) {
+				for ( l = 0; l < edgeBag[i].count ; i++) {
 				    if (((onOffMatrix[k] & Tnodes[k]) & edgeBag[i].zebra[l]) != f){
 					   C3 = C3 && 1;
 				    }
-				    else {
+				    else 
 				       C3 = 0;
-				   }
 		        }
 		    }
 		} 
@@ -394,7 +393,7 @@ int  main()
     printf(" the value of mr.Ticks is %d and len was %d ", ticks , len);
     
   // assert(0);
-  __CPROVER_assert(!(C0 && C1 && C2 && C3 && C4 && C5) , "Graph that satisfy friendZoned model exists");  
+  __CPROVER_assert(!(C0 && C1 && C2 && C3 && C5) , "Graph that satisfy friendZoned model exists");  
  
 }
 

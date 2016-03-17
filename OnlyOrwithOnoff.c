@@ -10,7 +10,7 @@
 #define M 4         
 #define N 2 
 #define snareLength 4
-#define len 3
+#define len 4
 
 _Bool nondet_bool();
 unsigned int nondet_uint();
@@ -36,7 +36,6 @@ struct EdgeBag
    unsigned int jth;
    unsigned int count;
    bitvector edgeWeight;
-   snareVector zebra[snareLength];
    snareVector  vSnare;
    snareVector tSnare;
    snareVector combinedMask; 
@@ -61,7 +60,7 @@ int  main()
     snareVector total, cond2Total, cond2fareTotal, centTotal, placeHolder, v, vl, vl2, t, f, v2, lastv, lastv2 ,nv, nv2, v0, v02 ;
     snareVector Tedge[N][N], Vedge[N][N] , Vedge2[N][N] , Tedge2[N][N] , fComp , bComp;    
     snareVector friendMatrix[snareLength];     
-    snareVector onOffMatrix[N], stCorres;
+    snareVector onOffMatrix[N],vOnOffMatrix[N],  stCorres;
   
     unsigned int graph[N][N]; 
 
@@ -152,6 +151,21 @@ int  main()
                    Tedge2[i][j] = edgeBag[edgePos].tSnare;
                    edgePos = edgePos + 1;
              }
+/*
+             if ((graph[i][j] == 3)) {
+                  edgeBag[edgePos].ith = i;      // Record the Source Node  
+                  edgeBag[edgePos].jth = j;      // Record the Target Node
+ 
+                 // Only molecule present at the nodes are allowed to fly out.
+                   __CPROVER_assume((edgeBag[edgePos].vSnare  & (~ Vnodes[i])) == 0);
+                   __CPROVER_assume((edgeBag[edgePos].tSnare  & (~ Tnodes[i])) == 0);
+                    // Additional Vedge2[i][j] and Tedge2[i][j] is used to be lookup value in global steady state check condition.
+                   Vedge2[i][j] = edgeBag[edgePos].vSnare;
+                   Tedge2[i][j] = edgeBag[edgePos].tSnare;
+                   edgePos = edgePos + 1;
+             }
+ 
+*/
 
           }
      }
@@ -182,7 +196,17 @@ int  main()
     for ( i = 0; i < N; i++) {
               __CPROVER_assume(Vnodes[i] != 0);
     }
-    
+   /*
+    //  Make assumption that each TNodes will be differnt.    
+    for  (i = 0; i < N; i++) {
+        for (j = 0; j < N; j++) {
+            if ( i != j) {
+              __CPROVER_assume(Tnodes[i] != Tnodes[j]);
+              __CPROVER_assume(Vnodes[i] != Vnodes[j]);
+           }
+        } 
+    }
+*/
     C1 = 1;
 // No.1 : Steady State Condition For VSnares	
    for (i = 0; i < len; i++ ) {      // For each Edge  
@@ -304,7 +328,30 @@ int  main()
         } 
       }  // jth for closed    
     }   
+/*
+    C6 = 1;
+    //  C4 : Boolean Condition : Each Row of FriendMatrix is Non-zero : 
+     for  (j = 0; j < snareLength; j++) {
+         if (friendMatrix[j] & (( 1 << snareLength) -1)) {
+             C6 = C6 && 1;
+         }
+         else {
+             C6 = C6 && 0;
+         }
+     }
 
+
+   C7 = 1;
+   //  C5 : Bool , Each Row of OnOffMatrix is Non-zero :
+    for  (j = 0; j < N; j++) {
+         if (onOffMatrix[j] & (( 1 << snareLength) -1))  {
+             C7 = C7 && 1;
+         }
+         else {
+             C7 = C7 && 0;
+         }
+     }
+*/
 
     for  (i = 0; i < len; i++) {
         centTotal = 0b0;
@@ -322,11 +369,11 @@ int  main()
            valj = edgeBag[i].jth;
            vali = edgeBag[i].ith;
           
-           if( (v & (1 << j)) && ((t & f) != f) ){
-              edgeBag[i].zebra[ticks] = f;
+           if( (v & (1 << j)) && ((t & f) == 0) ){
               centTotal = centTotal | f;
               ticks = ticks + 1;     
-              if ( (((Tnodes[valj] & onOffMatrix[valj]) & f)  == f)  &&  ((onOffMatrix[vali] & f) != f)) {
+              
+              if ( (((Tnodes[valj] & onOffMatrix[valj]) & f)  != 0)  &&  ((onOffMatrix[vali] & f) == 0)) {
                  Ck = Ck || 1 ;                                  
               }
            }
@@ -344,14 +391,11 @@ int  main()
 
         for (k = 0; k < N; k++) {
 			if( k != edgeBag[i].jth) {
-				for ( l = 0; l < edgeBag[i].count ; l++) {
-				    if (((onOffMatrix[k] & Tnodes[k]) & edgeBag[i].zebra[l]) != f){
-					   C3 = C3 && 1;
-				    }
-				    else {
-				       C3 = 0;
-				   }
-		        }
+				if (((onOffMatrix[k] & Tnodes[k]) & edgeBag[i].combinedMask) == 0){
+					 C3 = C3 && 1;
+				 }
+				 else 
+				    C3 = 0;
 		    }
 		} 
 
@@ -394,7 +438,7 @@ int  main()
     printf(" the value of mr.Ticks is %d and len was %d ", ticks , len);
     
   // assert(0);
-  __CPROVER_assert(!(C0 && C1 && C2 && C3 && C4 && C5) , "Graph that satisfy friendZoned model exists");  
+  __CPROVER_assert(!(C0 && C1 && C2 && C3 && (C5)) , "Graph that satisfy friendZoned model exists");  
  
 }
 
