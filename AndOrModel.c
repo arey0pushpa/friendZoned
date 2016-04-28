@@ -7,10 +7,10 @@
 #include <stdlib.h>
 
 
-#define M 4         
-#define N 2 
-#define snareLength 4
-#define len 3
+#define M 6         
+#define N 3
+#define snareLength 6
+#define len 5
 
 _Bool nondet_bool();
 unsigned int nondet_uint();
@@ -326,7 +326,7 @@ int  main()
               edgeBag[i].zebra[ticks] = f;
               centTotal = centTotal | f;
               ticks = ticks + 1;     
-              if ( (((Tnodes[valj] & onOffMatrix[valj]) & f)  == f)  &&  ((onOffMatrix[vali] & f) != f)) {
+              if ( (((Tnodes[valj] & onOffMatrix[valj]) & f)  == f)  &&  (((onOffMatrix[vali] & Tnodes[vali]) & f) != f)) {
                  Ck = Ck || 1 ;                                  
               }
            }
@@ -345,7 +345,7 @@ int  main()
         for (k = 0; k < N; k++) {
 			if( k != edgeBag[i].jth) {
 				for ( l = 0; l < edgeBag[i].count ; l++) {
-				    if (((onOffMatrix[k] & Tnodes[k]) & edgeBag[i].zebra[l]) != f){
+				    if (((onOffMatrix[k] & Tnodes[k]) & edgeBag[i].zebra[l]) != edgeBag[i].zebra[l]){
 					   C3 = C3 && 1;
 				    }
 				    else {
@@ -394,7 +394,7 @@ int  main()
     printf(" the value of mr.Ticks is %d and len was %d ", ticks , len);
     
   // assert(0);
-  __CPROVER_assert(!(C0 && C1 && C2 && C3 && C4 && C5) , "Graph that satisfy friendZoned model exists");  
+  __CPROVER_assert(!(C0 && C1 && C2 && C3 && C5 && C4) , "Graph that satisfy friendZoned model exists");  
  
 }
 

@@ -7,10 +7,10 @@
 #include <stdlib.h>
 
 
-#define M 4         
-#define N 2 
-#define snareLength 4
-#define len 4
+#define M 6         
+#define N 3
+#define snareLength 6
+#define len 5
 
 _Bool nondet_bool();
 unsigned int nondet_uint();
@@ -373,7 +373,7 @@ int  main()
               centTotal = centTotal | f;
               ticks = ticks + 1;     
               
-              if ( (((Tnodes[valj] & onOffMatrix[valj]) & f)  != 0)  &&  ((onOffMatrix[vali] & f) == 0)) {
+              if ( (((Tnodes[valj] & onOffMatrix[valj]) & f)  != 0)  &&  (((onOffMatrix[vali] & Tnodes[vali]) & f) == 0)) {
                  Ck = Ck || 1 ;                                  
               }
            }
@@ -438,7 +438,7 @@ int  main()
     printf(" the value of mr.Ticks is %d and len was %d ", ticks , len);
     
   // assert(0);
-  __CPROVER_assert(!(C0 && C1 && C2 && C3 && (C5)) , "Graph that satisfy friendZoned model exists");  
+  __CPROVER_assert(!(C0 && C1 && C2 && C3 && C4 && C5) , "Graph that satisfy friendZoned model exists");  
  
 }
 
