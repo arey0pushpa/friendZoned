@@ -4,7 +4,7 @@
 #define M 4       
 #define N 2
 #define snareLength 4
-#define bigLen  16 // 2 ^ 2 ^ M
+#define bigLen  16   // 2 ^ M
 #define len 3
 
 _Bool nondet_bool();
@@ -341,7 +341,7 @@ int main (int argc, char** argv)
               if (result == 0) {   
                   edgeBag[i].zebra[ticks] = j;  
                   ticks  =  ticks + 1;
-	              fComp  =  (Tnodes[valj] & onOffMatrix[valj]);   
+	          fComp  =  (Tnodes[valj] & onOffMatrix[valj]);   
                   bComp  =  (Tnodes[vali] & onOffMatrix[vali]);    		  
                   vf  =  vSnareChoicef[j];    
                   if (  (vf  & (1 << fComp ))  && ( (vf & (1 << bComp)) == 0 ))  {
@@ -363,7 +363,7 @@ int main (int argc, char** argv)
          for (k = 0;k < N; k++){
               if (k != edgeBag[i].jth){	                    
  			      bComp =  Tnodes[k] & onOffMatrix[k] ;   	  			       
-			      for (l = 0 ; l < edgeBag[i].count; l++) {           // THIS IS DYNAMIC CODE    
+			      for (l = 0; l < edgeBag[i].count; l++) {           // THIS IS DYNAMIC CODE    
 			           vf = vSnareChoicef[edgeBag[i].zebra[l]];  
 			           if ( (vf & (1 << bComp)) == 0) {
                              C3 = C3 && 1;
